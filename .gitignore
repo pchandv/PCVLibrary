@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/ReadExcel/bin/Debug
+/ReadExcel/obj
+/PCVMVCAppBasicTemplate/bin
+/PCVMVCAppBasicTemplate/obj
+/PCVLibrary/bin/Debug
+/PCVLibrary/obj
+/PCVJavaScripLibrary/bin
+/PCVJavaScripLibrary/obj
