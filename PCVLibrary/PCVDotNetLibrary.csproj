@@ -51,6 +51,7 @@
     <Compile Include="CommonService\MapperService.cs" />
     <Compile Include="Extensions\Extenisons.cs" />
     <Compile Include="Linq\LinqPredicateQuery.cs" />
+    <Compile Include="MVC\AutoCompleteTextBoxModel.cs" />
     <Compile Include="MVC\PagingViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CommonService\ReadExcel.cs" />

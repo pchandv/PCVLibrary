@@ -1,0 +1,39 @@
+﻿@model PCVLibrary.MVC.AutoCompleteTextBoxModel
+@{
+    string GuidID = Guid.NewGuid().ToString();
+}
+<div class="col-md-12">
+    @*@Html.HiddenFor(model=>model.SelectedValue)*@
+    @Html.EditorFor(model => model.SelectedValue, new { htmlAttributes = new { @class = string.Format("{0} {1} ", GuidID, " form-control") } })
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var $autoCmpTxbx = $('input.@GuidID' +'[type=text]');
+        $autoCmpTxbx.autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "@Model.Url",
+                    type: "POST",
+                    dataType: "json",
+                    data: { '@Model._paraName': request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Value, value: item.Value };
+                        }))
+                    }
+                })
+            },
+            messages: {
+                noResults: "No records found", results: ""
+            },
+            minLength:3
+            ,
+            select: function (e, i) {
+                console.log(i.item.val);
+            }
+        });
+    })
+</script>

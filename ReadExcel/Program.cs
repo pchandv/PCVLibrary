@@ -1,4 +1,5 @@
 ﻿using PCVLibrary;
+using PCVLibrary.MVC;
 using PCVLibrary.MVCGrid;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,38 @@ namespace PCVLibraryTESTConsole
         
         static void Main(string[] args)
         {
+            // TestExcel();
+
+            ProductVM m = new ProductVM();
+            var s = m.Details.GetType().BaseType.Name;
+            Console.WriteLine(s);
+            Console.Read();
+            
+
+
+        }
+
+        public class ProductVM
+        {
+            public ProductVM()
+            {
+                Details = new AutoCompleteTextBoxModel("", "","");
+            }
+            public AutoCompleteTextBoxModel Details { get; set; }
+        }
+
+
+
+
+        #region TestLogic
+        private static void TestExcel()
+        {
             var vm = new List<CustomerVM>();
             //ReadExcel.RunExcelTest();
 
             for (int i = 1; i < 125; i++)
             {
-                vm.Add(new CustomerVM() { index = i,Name="Visam_"+i });
+                vm.Add(new CustomerVM() { index = i, Name = "Visam_" + i });
             }
 
             while (Console.ReadLine() != "stop")
@@ -33,15 +60,13 @@ namespace PCVLibraryTESTConsole
                 grid.IsSortEnable = true;
                 grid.sortExpression = "index";
                 grid.sortDirection = "D";
-                Console.WriteLine("Page Count:->"+grid.PageCount);
+                Console.WriteLine("Page Count:->" + grid.PageCount);
                 foreach (var item in grid.DataSource)
                 {
-                    Console.WriteLine("|| index:{0} || Name{1} ||",item.index,item.Name);
+                    Console.WriteLine("|| index:{0} || Name{1} ||", item.index, item.Name);
                 }
             }
-
         }
-
         public class CustomerGrid:PageViewModel<CustomerVM>
         {
 
@@ -51,8 +76,9 @@ namespace PCVLibraryTESTConsole
             public int index { get; set; }
             public string Name { get; set; }
         }
-
-
+        #endregion
 
     }
+
+   
 }
