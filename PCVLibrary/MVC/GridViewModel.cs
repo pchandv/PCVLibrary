@@ -181,6 +181,7 @@ namespace PCVLibrary.MVCGrid
 
     public interface IGridViewModel
     {
+        void SetGridFilters(GridViewFilter filter);
         /// <summary>
         /// Generic List of type object and this can set as below
         ///  var vm = new List<Object>();
@@ -238,7 +239,9 @@ namespace PCVLibrary.MVCGrid
 
 
     }
-
+    /// <summary>
+    /// GridView Column type and should provide display name and class property name of ViewModel
+    /// </summary>
     public class Column
     {
         /// <summary>
@@ -255,7 +258,11 @@ namespace PCVLibrary.MVCGrid
         public bool isHide { get; set; }
 
     }
-
+    /// <summary>
+    /// This is generic class to get class name,property name,method names
+    /// instead of hard coding of class name this can be used.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Descriptor<T>
     {
         /// <summary>
