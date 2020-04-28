@@ -45,7 +45,7 @@ namespace PCVMVCAppBasicTemplate.Controllers
         {
             var mp = new Descriptor<ProductController>();
             List<object> vm = GetData();
-            GridViewModel grid = new GridViewModel(mp.ControllerName(), mp.ActionName(x => x.GridBind(null)), "Employee Details", SetColumns());
+            GridViewModel grid = new GridViewModel(mp.ControllerName, mp.ActionName(x => x.GridBind(null)), "Employee Details", SetColumns());
             grid.DataSource = vm;
             grid.IsSortEnable = true;
             grid.SetGridFilters(filter);
@@ -56,7 +56,7 @@ namespace PCVMVCAppBasicTemplate.Controllers
         {
             var mp = new Descriptor<ProductController>();
             List<object> vm = GetData2();
-            GridViewModel grid = new GridViewModel(mp.ControllerName(), mp.ActionName(x => x.GridBind2(null)), "Mobile Phone List", SetColumns2());
+            GridViewModel grid = new GridViewModel(mp.ControllerName, mp.ActionName(x => x.GridBind2(null)), "Mobile Phone List", SetColumns2());
             grid.DataSource = vm;
             grid.SetGridFilters(filter);
             return PartialView(grid._PartialGridView, grid);

@@ -1,4 +1,5 @@
 ﻿using PCVLibrary.MVC;
+using PCVLibrary.MVCGrid;
 using PCVMVCAppBasicTemplate.Controllers;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace PCVMVCAppBasicTemplate.Models
     {
         public ProductSearchVM()
         {
-            ProductName = new AutoCompleteTextBoxModel("Product","SearchProducts");
+            var d = new Descriptor<ProductController>();
+            ProductName = new AutoCompleteTextBoxModel(d.ControllerName, d.ActionName(x=>x.SearchProducts("")));
         }
         [UIHint("AutoCompleteTextBox")]
         [Display(Name ="Product Name")]
