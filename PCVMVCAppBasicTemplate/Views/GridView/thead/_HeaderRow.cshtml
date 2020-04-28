@@ -1,0 +1,17 @@
+﻿@using PCVLibrary.MVCGrid
+@model List<Column>
+<thead>
+    <tr>
+        @foreach (var header in Model)
+        {
+            if (!header.isHide)
+            {
+                <th  data-sort="@header.Name" data-sortexp="A">@header.DisplayName</th>
+            }
+            else
+            {
+                <th style="display:none;">@header.DisplayName</th>
+            }
+        }
+    </tr>
+</thead>

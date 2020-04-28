@@ -1,0 +1,3 @@
+C:\PersonalLibraryGit\PCVSolution\PCVTypeScriptLibrary\obj\Debug\PCVTypeScriptLibrary.njsprojAssemblyReference.cache
+C:\PersonalLibraryGit\PCVSolution\PCVTypeScriptLibrary\obj\Debug\PCVTypeScriptLibrary.njsproj.CoreCompileInputs.cache
+C:\PersonalLibraryGit\PCVSolution\PCVTypeScriptLibrary\bin\Microsoft.NodejsTools.WebRole.dll

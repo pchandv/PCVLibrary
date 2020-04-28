@@ -1,0 +1,155 @@
+﻿@model PCVLibrary.MVCGrid.GridViewModel
+@{
+    string divId = Guid.NewGuid().ToString();
+    Model.CurrentPageIndex = Model.CurrentPageIndex == 0 ? 1 : Model.CurrentPageIndex;
+
+}
+
+<div id="gvdiv_@divId" class="col-lg-12">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-lg-12" align="center">
+            <strong>@Model.GridTitle</strong>
+            &nbsp; &nbsp;
+            <button type="button" id="refresh_@divId" class="btn btn-default btn-sm pull-right" style="margin-bottom:5px;">
+                <span class="glyphicon glyphicon-refresh"></span> Refresh
+            </button>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12" align="center">
+            <table data-id="@divId" data-source="@Model.datasourceUrl" class="table table-bordered tab-content table table-fixed">
+                <thead>
+                    <tr>
+                        @foreach (var header in Model.Headers)
+                        {
+                            if (!header.isHide)
+                            {
+                                <th>
+                                    @if (Model.IsSortEnable)
+                                    {
+                                        <a class="gridSortLink" data-sortOrder="@Model.sortDirection" data-sortExpression="@header.Name" href="#">@header.DisplayName</a>
+                                    }
+                                    else
+                                    {
+                                        @header.DisplayName
+                                    }
+                                </th>
+                            }
+                            else
+                            {
+                                <th style="display:none;">@header.DisplayName</th>
+                            }
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.DataSource)
+                    {
+                        <tr>
+                            @foreach (var cell in Model.Headers)
+                            {
+
+                                if (!cell.isHide)
+                                {
+                                    <td>@Model.GetPropValue(row, cell.Name)</td>
+                                }
+                                else
+                                {
+                                    <td style="display:none;">
+                                        @Model.GetPropValue(row, cell.Name)
+                                    </td>
+                                }
+
+                            }
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="@Model.Headers.Where(x=>!x.isHide).Count()">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <button id="btnPrevious_@divId" class="btn btn-primary @Model.isPreviousDisabled" @Model.isPreviousDisabled>Previous</button>
+                                    <button id="btnNext_@divId" class="btn btn-primary @Model.isNextDisabled" @Model.isNextDisabled>Next</button>
+                                </div>
+                                <div class="col-lg-4">
+                                    <strong>Current Page</strong>
+                                    <input type="text" id="txtPageIndex_@divId" min="0" max="@Model.TotalPageCount" style="width:40px" name="name" value="@Model.CurrentPageIndex" />
+                                </div>
+                                <div class="col-lg-4">
+                                    <label>Total Pages:<strong>@Model.TotalPageCount</strong></label>
+                                </div>
+                        </td>
+                    </tr>
+                </tfoot>
+
+            </table>
+            <script>
+        $(document).ready(function () {
+            var hiddenSortExperission ='@Model.sortExpression';
+            var hiddenSortOrder='@Model.sortDirection';
+            var $gvdiv = $("#gvdiv_@divId");
+            var $txtPageIndex = $("#txtPageIndex_@divId");
+            var data = { currentPageIndex: @Model.CurrentPageIndex, sortExpression: hiddenSortExperission, sortDirection: hiddenSortOrder };
+
+        $txtPageIndex.on("change", function () {
+            if ($txtPageIndex.val()<= @Model.TotalRecords) {
+                OnPageNavigate($txtPageIndex.val());
+            }
+        })
+
+        var $btnPrevious = $('#btnPrevious_@divId');
+        var $btnNext = $('#btnNext_@divId');
+
+        $btnPrevious.on('click', function () {
+            OnPageNavigate(@Model.PreviousPage);
+        })
+        $btnNext.on('click', function () {
+            OnPageNavigate(@Model.NextPage);
+        })
+        function OnPageNavigate(PageIndex) {
+            var params = { currentPageIndex: PageIndex, sortExpression: hiddenSortExperission, sortDirection: hiddenSortOrder };
+            reload('@Model.datasourceUrl', params);
+        }
+        var reload = function (url, d) {
+            console.log(d);
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: d,
+                success: function (d2) {
+                    $gvdiv.replaceWith(d2);
+                }, error: function (e, x) {
+                    console.log(e);
+                }
+            });
+        }
+
+        var $sortlink = $('a.gridSortLink');
+
+        $sortlink.on("click", function (e) {
+            e.preventDefault();
+            var sortOrder = $sortlink.attr("data-sortOrder");
+            var sortExpression = $sortlink.attr("data-sortExpression");
+
+            console.log(sortOrder + "," + sortExpression);
+
+            var params = { currentPageIndex: @Model.CurrentPageIndex, sortExpression: sortExpression, sortDirection: sortOrder };
+            reload('@Model.datasourceUrl', params);
+        })
+
+            var $refresh = $("#refresh_@divId");
+            $refresh.on("click", function (e) {
+                e.preventDefault();
+               var params = { currentPageIndex: 1 };
+               reload('@Model.datasourceUrl', params);
+            })
+
+
+
+        })
+            </script>
+        </div>
+    </div>
+</div>
