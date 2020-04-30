@@ -41,28 +41,29 @@ namespace PCVMVCAppBasicTemplate.Controllers
         {
             return View();
         }
+      //  [OutputCache(Duration =1000)]
         public ActionResult GridBind(GridViewFilter filter)
         {
-            var mp = new Descriptor<ProductController>();
-            List<object> vm = GetData();
-            GridViewModel grid = new GridViewModel(mp.ControllerName, mp.ActionName(x => x.GridBind(null)), "Employee Details", SetColumns());
-            grid.DataSource = vm;
-            grid.IsSortEnable = true;
-            grid.SetGridFilters(filter);
+            EmployeeGridView grid = new EmployeeGridView(filter);
             return PartialView(grid._PartialGridView, grid);
         }
 
-        public ActionResult GridBind2(GridViewFilter filter)
+      
+        public ActionResult EditEmployee(int EmpID)
         {
-            var mp = new Descriptor<ProductController>();
-            List<object> vm = GetData2();
-            GridViewModel grid = new GridViewModel(mp.ControllerName, mp.ActionName(x => x.GridBind2(null)), "Mobile Phone List", SetColumns2());
-            grid.DataSource = vm;
-            grid.SetGridFilters(filter);
-            return PartialView(grid._PartialGridView, grid);
+            return View("_EditEmployee",EmpID);
+        }
+        public ActionResult DeleteEmployee(int EmpID)
+        {
+            return View("_EditEmployee", EmpID);
+        }
+        public ActionResult SaveEmployee(int EmpID)
+        {
+            return View("_EditEmployee", EmpID);
         }
 
 
+        #region MyRegion
         private static List<object> GetData()
         {
             var vm = new List<Object>();
@@ -73,37 +74,11 @@ namespace PCVMVCAppBasicTemplate.Controllers
 
             return vm;
         }
-        private static List<object> GetData2()
-        {
-            var vm = new List<Object>();
-            for (int i = 1; i <= 100250; i++)
-            {
-                vm.Add(new ProductVM() { ProductID = i, ProductNames = "Iphone_" + i, Description = "Iphone Made in UK for _" + i + " Times" });
-            }
 
-            return vm;
-        }
-
-        public List<Column> SetColumns( )
-        {
-            var mp = new Descriptor<EmployeeVM>();
-            List<Column> Headers = new List<Column>();
-            Headers.Add(new Column() { DisplayName = "Employee First Name", Name = mp.Name(x=>x.FirstNames) });
-            Headers.Add(new Column() { DisplayName = "Employee Last Name", Name = mp.Name(x => x.LastName) });
-            Headers.Add(new Column() { DisplayName = "Employee ID", Name = mp.Name(x => x.EmpID)});
-            return Headers;
-        }
-        public List<Column> SetColumns2()
-        {
-            var mp = new Descriptor<ProductVM>();
-            List<Column> Headers = new List<Column>();
-            Headers.Add(new Column() { DisplayName = "Product Name", Name = mp.Name(x => x.ProductNames) });
-            Headers.Add(new Column() { DisplayName = "Product Description", Name = mp.Name(x => x.Description) });
-            Headers.Add(new Column() { DisplayName = "Product ID", Name = mp.Name(x => x.ProductID), isHide = true });
-            return Headers;
-        }
+        
+        #endregion
     }
-  
+
     public class EmployeeVM
     {
         public int EmpID { get; set; }
@@ -116,4 +91,64 @@ namespace PCVMVCAppBasicTemplate.Controllers
         public string ProductNames { get; set; }
         public string Description { get; set; }
     }
+
+    public class EmployeeGridView : GridViewModel
+    {
+        public EmployeeGridView(GridViewFilter filter) : 
+            base(Descriptor<ProductController>.ControllerName,Descriptor<ProductController>.ActionName(x=>x.GridBind(null)), "Employee Grid")
+        {
+            this.IsEditable = true;
+            this.EditView = new GridViewEditView
+                ("Employee Edit", Descriptor<ProductController>.ControllerName,
+                Descriptor<ProductController>.ActionName(x => x.EditEmployee(0)), Descriptor<ProductController>.ActionName(x => x.SaveEmployee(0))
+                , Descriptor<ProductController>.ActionName(x => x.DeleteEmployee(0)),
+                Descriptor<EmployeeVM>.Name(x => x.EmpID));
+            this.SetGridFilters(filter);
+            this._MaxRows = 15;
+        }
+        public override List<Column> SetColumns()
+        {
+            var Headers = new List<Column>();
+            Headers.Add(new Column() { DisplayName = "Employee First Name", Name = Descriptor<EmployeeVM>.Name(x => x.FirstNames) });
+            Headers.Add(new Column() { DisplayName = "Employee Last Name", Name = Descriptor<EmployeeVM>.Name(x => x.LastName) });
+            Headers.Add(new Column() { DisplayName = "Employee ID", Name = Descriptor<EmployeeVM>.Name(x => x.EmpID) });
+            Headers.Add(new Column() { DisplayName = "Employee First Name", Name = Descriptor<EmployeeVM>.Name(x => x.FirstNames) });
+            Headers.Add(new Column() { DisplayName = "Employee Last Name", Name = Descriptor<EmployeeVM>.Name(x => x.LastName) });
+            Headers.Add(new Column() { DisplayName = "Employee ID", Name = Descriptor<EmployeeVM>.Name(x => x.EmpID) });
+            Headers.Add(new Column() { DisplayName = "Employee First Name", Name = Descriptor<EmployeeVM>.Name(x => x.FirstNames) });
+            //Headers.Add(new Column() { DisplayName = "Employee Last Name", Name = Descriptor<EmployeeVM>.Name(x => x.LastName) });
+            //Headers.Add(new Column() { DisplayName = "Employee ID", Name = Descriptor<EmployeeVM>.Name(x => x.EmpID) });
+            //Headers.Add(new Column() { DisplayName = "Employee First Name", Name = Descriptor<EmployeeVM>.Name(x => x.FirstNames) });
+            //Headers.Add(new Column() { DisplayName = "Employee Last Name", Name = Descriptor<EmployeeVM>.Name(x => x.LastName) });
+            //Headers.Add(new Column() { DisplayName = "Employee ID", Name = Descriptor<EmployeeVM>.Name(x => x.EmpID) });
+            //Headers.Add(new Column() { DisplayName = "Employee First Name", Name = Descriptor<EmployeeVM>.Name(x => x.FirstNames) });
+            //Headers.Add(new Column() { DisplayName = "Employee Last Name", Name = Descriptor<EmployeeVM>.Name(x => x.LastName) });
+            //Headers.Add(new Column() { DisplayName = "Employee ID", Name = Descriptor<EmployeeVM>.Name(x => x.EmpID) });
+            //Headers.Add(new Column() { DisplayName = "Employee First Name", Name = Descriptor<EmployeeVM>.Name(x => x.FirstNames) });
+            //Headers.Add(new Column() { DisplayName = "Employee Last Name", Name = Descriptor<EmployeeVM>.Name(x => x.LastName) });
+            //Headers.Add(new Column() { DisplayName = "Employee ID", Name = Descriptor<EmployeeVM>.Name(x => x.EmpID) });
+            //Headers.Add(new Column() { DisplayName = "Employee First Name", Name = Descriptor<EmployeeVM>.Name(x => x.FirstNames) });
+            //Headers.Add(new Column() { DisplayName = "Employee Last Name", Name = Descriptor<EmployeeVM>.Name(x => x.LastName) });
+            //Headers.Add(new Column() { DisplayName = "Employee ID", Name = Descriptor<EmployeeVM>.Name(x => x.EmpID) });
+            //Headers.Add(new Column() { DisplayName = "Employee First Name", Name = Descriptor<EmployeeVM>.Name(x => x.FirstNames) });
+            //Headers.Add(new Column() { DisplayName = "Employee Last Name", Name = Descriptor<EmployeeVM>.Name(x => x.LastName) });
+            //Headers.Add(new Column() { DisplayName = "Employee ID", Name = Descriptor<EmployeeVM>.Name(x => x.EmpID) });
+            //Headers.Add(new Column() { DisplayName = "Employee First Name", Name = Descriptor<EmployeeVM>.Name(x => x.FirstNames) });
+            //Headers.Add(new Column() { DisplayName = "Employee Last Name", Name = Descriptor<EmployeeVM>.Name(x => x.LastName) });
+            //Headers.Add(new Column() { DisplayName = "Employee ID", Name = Descriptor<EmployeeVM>.Name(x => x.EmpID) });
+            return Headers;
+        }
+        public override List<object> GetDataSource()
+        {
+            var vm = new List<EmployeeVM>();
+            for (int i = 1; i <= 100250; i++)
+            {
+                vm.Add(new EmployeeVM() { EmpID = i, FirstNames = "Visam_Praveen" + i, LastName = "Chandu" + i });
+            }
+            return vm.ToList<object>();
+        }
+    }
+
+    
+
 }

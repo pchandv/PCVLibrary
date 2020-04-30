@@ -179,6 +179,7 @@
     <Content Include="Views\GridView\_EditTemplate.cshtml" />
     <Content Include="Views\GridView\thead\_HeaderCell.cshtml" />
     <Content Include="Views\Product\GridLandingScreen.cshtml" />
+    <Content Include="Views\Product\_EditEmployee.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

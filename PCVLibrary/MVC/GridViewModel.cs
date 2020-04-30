@@ -15,22 +15,23 @@ namespace PCVLibrary.MVCGrid
         /// and also column names
         /// </summary>
         /// <param name="ControllerName"></param>
-        /// <param name="ActionName"></param>
+        /// <param name="DataSourceActionName"></param>
         /// <param name="GridTitle"></param>
         /// <param name="Headers"></param>
-        public GridViewModel(string ControllerName, string ActionName, string GridTitle, List<Column> Headers)
+        public GridViewModel(string ControllerName, string DataSourceActionName, string GridTitle)
         {
-            datasourceUrl = string.Format("/{0}/{1}", ControllerName, ActionName);
+            datasourceUrl = string.Format("/{0}/{1}", ControllerName, DataSourceActionName);
             this.GridTitle = GridTitle;
-            this._Headers = Headers;
+            this._Headers = this.SetColumns();
+            this._dataSource = this.GetDataSource();
         }
-        #region Local Variables
-        int _CurrentPageIndex;
-        string _GridPartialView = "../GridView/_GridView";
-        private List<object> _dataSource;
-        private int _MaxRows = 10;
-        List<Column> _Headers;
-        string _sortOrder = "A";
+        #region protected Local Variables
+        protected int _CurrentPageIndex;
+        protected string _GridPartialView = "../GridView/_GridView";
+        protected List<object> _dataSource;
+        protected int _MaxRows = 10;
+        protected List<Column> _Headers;
+        protected string _sortOrder = "A";
         #endregion
 
         #region Public Properties
@@ -169,14 +170,35 @@ namespace PCVLibrary.MVCGrid
             this.CurrentPageIndex = filter.currentPageIndex;
         }
 
-        public void SetColumns(List<Column> columns)
+        public virtual List<Column> SetColumns()
         {
-            if (columns != null && columns.Count() != 0)
+            throw new NotImplementedException("Set Columns Method not implemented");
+        }
+
+        public virtual List<object> GetDataSource() 
+        {
+            if (this.TotalRecords == 0)
             {
-                _Headers = columns;
+                throw new NotImplementedException("GetDataSource Method not implemented");
             }
+            return _dataSource;
         }
         #endregion
+        public bool IsEditable { get; set; }
+        public int ColspanNumber
+        {
+            get
+            {
+                int colspan = this.Headers.Where(x => !x.isHide).Count();
+                return this.IsEditable ? colspan + 1 : colspan;
+            }
+        }
+
+        public GridViewEditView EditView { get; set; }
+
+
+
+
     }
 
     public interface IGridViewModel
@@ -235,9 +257,9 @@ namespace PCVLibrary.MVCGrid
         //  Headers.Add(new Column() { DisplayName = "Employee ID", Name = mp.Name(x => x.EmpID)});
         //  return Headers;
         /// </summary>
-        void SetColumns(List<Column> columns);
+        List<Column> SetColumns();
 
-
+        List<object> GetDataSource();
     }
     /// <summary>
     /// GridView Column type and should provide display name and class property name of ViewModel
@@ -263,7 +285,7 @@ namespace PCVLibrary.MVCGrid
     /// instead of hard coding of class name this can be used.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Descriptor<T>
+    public static class Descriptor<T>
     {
         /// <summary>
         /// Returns Property Name of type T
@@ -271,7 +293,7 @@ namespace PCVLibrary.MVCGrid
         /// <typeparam name="TProp"></typeparam>
         /// <param name="propertySelector"></param>
         /// <returns></returns>
-        public string Name<TProp>(Expression<Func<T, TProp>> propertySelector)
+        public static string Name<TProp>(Expression<Func<T, TProp>> propertySelector)
         {
             MemberExpression body = (MemberExpression)propertySelector.Body;
             return body.Member.Name;
@@ -280,7 +302,7 @@ namespace PCVLibrary.MVCGrid
         /// Returns Controller Name or Class name of T
         /// </summary>
         /// <returns></returns>
-        public string ControllerName
+        public static string ControllerName
         {
             get
             {
@@ -293,7 +315,7 @@ namespace PCVLibrary.MVCGrid
         /// <typeparam name="TProp"></typeparam>
         /// <param name="propertySelector"></param>
         /// <returns></returns>
-        public string ActionName<TProp>(Expression<Func<T, TProp>> propertySelector)
+        public static string ActionName<TProp>(Expression<Func<T, TProp>> propertySelector)
         {
             MethodCallExpression body = (MethodCallExpression)propertySelector.Body;
             return body.Method.Name;
@@ -311,4 +333,23 @@ namespace PCVLibrary.MVCGrid
         public int currentPageIndex { get; set; }
     }
 
+
+    public class GridViewEditView
+    {
+        public GridViewEditView(string EditTitle, string ControllerName, string EditActionName, string SaveActionName, string DeleteActionName, string PrimaryKeyName)
+        {
+            EditUrl = string.Format("/{0}/{1}", ControllerName, EditActionName);
+            this.PrimaryKeyName = PrimaryKeyName;
+            this.EditTitle = EditTitle;
+            this.SaveUrl = string.Format("/{0}/{1}", ControllerName, SaveActionName);
+            this.DeleteUrl = string.Format("/{0}/{1}", ControllerName, DeleteActionName);
+        }
+        public string EditUrl { get; set; }
+        public string PrimaryKeyName { get; set; }
+        public string EditTitle { get; set; }
+        public string SaveUrl { get; set; }
+        public string DeleteUrl { get; set; }
+    }
+
+  
 }

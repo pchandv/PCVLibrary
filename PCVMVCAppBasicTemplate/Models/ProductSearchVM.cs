@@ -13,8 +13,7 @@ namespace PCVMVCAppBasicTemplate.Models
     {
         public ProductSearchVM()
         {
-            var d = new Descriptor<ProductController>();
-            ProductName = new AutoCompleteTextBoxModel(d.ControllerName, d.ActionName(x=>x.SearchProducts("")));
+            ProductName = new AutoCompleteTextBoxModel(Descriptor<ProductController>.ControllerName, Descriptor<ProductController>.ActionName(x=>x.SearchProducts("")));
         }
         [UIHint("AutoCompleteTextBox")]
         [Display(Name ="Product Name")]

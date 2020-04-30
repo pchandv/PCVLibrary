@@ -1,1 +1,70 @@
-﻿
+﻿@model PCVLibrary.MVCGrid.GridViewEditView
+
+<!-- Modal -->
+<div class="modal fade" id="GridViewEditModel" role="dialog" data-saveUrl="">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.EditTitle</h4>
+            </div>
+            <div class="modal-body">
+                <div id="GridViewEditModelBody">
+                    <p>Loading.....</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnsave" class="btn btn-default" data-dismiss="modal">Save</button>
+                <button type="button" id="btnclose" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var $GridViewEditModelBody = $('#GridViewEditModelBody');
+        var $GridViewEditModel = $('#GridViewEditModel');
+        var $btnclose = $('#btnclose');
+        var $btnsave = $('#btnsave');
+
+        var $btnEdit = $('.btnEdit');
+        var selectedValue = '';
+        $btnEdit.on('click', function (e) {
+            selectedValue = $(this).attr('data-primarykey');
+        })
+
+
+        //On Modal Loading
+        $GridViewEditModel.on('show.bs.modal', function (e) {
+            loadView('@Model.EditUrl', {'@Model.PrimaryKeyName': selectedValue });
+        })
+
+
+        //On Modal Closing
+        $GridViewEditModel.on('hide.bs.modal', function (e) {
+            //alert('Are you sure?');
+            $GridViewEditModelBody.html("Loading......");
+        })
+        $btnclose.on('click', function (e) {
+            //e.stopPropagation();
+
+        })
+
+        var loadView = function (url, d) {
+            console.log(d);
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: d,
+                success: function (d2) {
+                    $GridViewEditModelBody.html(d2);
+                }, error: function (e, x) {
+                    console.log(e);
+                }
+            });
+        }
+
+
+    })
+</script>
